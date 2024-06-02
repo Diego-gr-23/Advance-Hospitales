@@ -1,6 +1,6 @@
 # "Novedades" Store Management App - A Roadmap
 
-This application aims to streamline inventory management and sales for "Novedades," a clothing store catering to college students. The app will offer functionalities for user management, product details, stock control, reporting, and more.
+This application aims to streamline inventory management and sales for "Hospitales," a clothing store catering to college students. The app will offer functionalities for user management, product details, stock control, reporting, and more.
 
 Here's a breakdown of the key features you described:
 
