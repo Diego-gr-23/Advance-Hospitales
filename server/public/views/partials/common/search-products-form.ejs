@@ -1,0 +1,85 @@
+<!-- DIV TO SEARCH OR FILTER -->
+<div>
+  <div class="justify-content-center">
+    <form action="<%=form_uri%>" method="POST">
+      <div class="row justify-content-center">
+        <!-- Search Type Dropdown -->
+        <div class="col-lg-3">
+          <div class="form-group">
+            <label for="searchType">Tipo de búsqueda</label>
+            <select
+              class="form-control"
+              name="searchType"
+              id="searchType"
+              required
+            >
+              <!-- FOR filterTypes TO SEARCH FROM BACKEND -->
+              <option selected disabled>-- SELECCIONAR --</option>
+              <% for (let filterType in filterTypes) { %>
+              <option value="<%=filterTypes[filterType]%>">
+                <%=filterTypes[filterType]%>
+              </option>
+              <% } %>
+            </select>
+          </div>
+          <!-- HIDDEN ATTRIBUTE TO FILTER BY BUILDING -->
+          <div class="form-check" hidden>
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                name="avoid_building"
+                id="avoid_building"
+                value="<%=avoid_building%>"
+                checked
+              />
+              FILTRAR POR TIENDA ACTUAL
+            </label>
+          </div>
+        </div>
+        <!-- Search Input and Button -->
+        <div class="col-lg-9">
+          <div class="form-group">
+            <label for="searchId">Buscador</label>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar productos..."
+                aria-label="Buscar productos"
+                aria-describedby="button-addon2"
+                id="searchId"
+                name="searchId"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-info"
+                  type="submit"
+                  id="button-addon2"
+                >
+                  Buscar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Tu tienda actual es:
+      <strong><%=building.name%></strong>
+    </div>
+
+    <script>
+      $(".alert").alert();
+    </script>
+  </div>
+</div>

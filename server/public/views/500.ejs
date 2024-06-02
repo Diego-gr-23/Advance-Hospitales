@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error en el Programa</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 50px;
+      }
+      .error-code {
+        font-size: 100px;
+        color: #dc3545;
+        margin-bottom: 20px;
+      }
+      .error-message {
+        font-size: 24px;
+        color: #343a40;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="error-code">500</div>
+    <div class="error-message"><%= error_message %></div>
+    <div>
+      <p>
+        No hemos podido mostrar la vista pertinente, es posible que tu sesión
+        haya expirado,
+        <a href="/login">vuelve a iniciar sesión haciendo click aquí</a>
+      </p>
+    </div>
+  </body>
+</html>

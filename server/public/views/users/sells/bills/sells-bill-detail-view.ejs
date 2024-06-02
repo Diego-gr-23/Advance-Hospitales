@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Detalle Factura</title>
+
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- ASIDE -->
+        <div><%- include("../../../partials/asides/sells-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-2">
+          <div class="mt-4">
+            <h1 class="text-center">Detalle de factura <%=db_bill.bill.id%></h1>
+            <p class="text-center">
+              Información de la factura <%=db_bill.bill.id%> recuperada el
+              <%=formatDate(db_bill.bill.date)%> aprobada por el usuario
+              <%=db_bill.bill.Worker_id%>
+            </p>
+          </div>
+          <!-- DISPLAY BILL INFO -->
+          <div>
+            <div class="row d-flex justify-content-between mt-4">
+              <!-- NO. BILL -->
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="id">No. de factura</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="id"
+                    id="id"
+                    aria-describedby="factura_id_small"
+                    placeholder="Factura no. ###"
+                    readonly
+                    value="<%=db_bill.bill.id%>"
+                  />
+                  <small id="factura_id_small" class="form-text text-muted"
+                    >Este es el ID / No. de factura seleccionada</small
+                  >
+                </div>
+              </div>
+              <!-- NIT -->
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="bill_nit">NIT</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="bill_nit"
+                    id="bill_nit"
+                    aria-describedby="bill_nit_small"
+                    placeholder="NIT 1234556"
+                    readonly
+                    value="<%=db_bill.bill.Client_NIT%>"
+                  />
+                  <small id="bill_nit_small" class="form-text text-muted"
+                    >NIT en el que se emitió la factura</small
+                  >
+                </div>
+              </div>
+              <!-- TOTAL -->
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="bill_total">Total</label>
+                  <input
+                    type="number"
+                    class="form-control text-right"
+                    name="bill_total"
+                    id="bill_total"
+                    step="0.01"
+                    min="0.00"
+                    aria-describedby="bill_total_small"
+                    placeholder="Total Q100.00"
+                    readonly
+                    value="<%=db_bill.bill.total.toFixed(2)%>"
+                  />
+                  <small id="bill_total_small" class="form-text text-muted"
+                    >Total de la factura emitida</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3 d-flex justify-content-between">
+              <div class="col-md-3">
+                <!-- DATE -->
+                <div class="form-group">
+                  <label for="bill_date">Fecha</label>
+                  <input type="date" class="form-control text-center
+                  name="bill_date" id="bill_date"
+                  aria-describedby="bill_date_small" placeholder="Fecha de
+                  emisión" readonly
+                  value="<%=db_bill.bill.date.toISOString().substring(0, 10)%>"
+                  />
+                  <small id="bill_date_small" class="form-text text-muted"
+                    >Fecha de emisión de la factura</small
+                  >
+                </div>
+              </div>
+              <div class="col-md-9">
+                <!-- TABLE WITH EXTRA INFO -->
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-center w-25" scope="row">
+                        CANCELADA
+                      </th>
+                      <th class="text-uppercase text-center w-25" scope="row">
+                        PEDIDO
+                      </th>
+                      <th class="text-uppercase text-center" scope="row">
+                        DETALLE
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td scope="row" class="text-center text-uppercase">
+                        <%=db_bill.bill.cancelled ? 'SI': 'No'%>
+                      </td>
+                      <td class="text-center text-uppercase">
+                        <%=!db_bill.bill.Order_id ? 'no': 'si'%>
+                      </td>
+                      <td class="text-uppercase text-justify">
+                        La orden fue generada por <%=db_bill.bill.Worker_id %>,
+                        esta factura incluye un total de
+                        <%=db_bill.details.length %> productos
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- DISPLAY BILL DETAIL INFO -->
+          <div class="row mt-5">
+            <div class="table-responsive">
+              <!-- declare a value to sum -->
+              <% let total = 0 %>
+              <table class="table table-striped">
+                <thead class="thead-dark">
+                  <tr>
+                    <th class="text-uppercase text-center">Prenda</th>
+                    <th class="text-uppercase text-center w-10">Talla</th>
+                    <th class="text-uppercase text-center">
+                      Precio unitario (GTQ)
+                    </th>
+                    <th class="text-uppercase text-center w-10">Cantidad</th>
+                    <th class="text-uppercase text-center">Extras</th>
+                    <th class="text-uppercase text-center">Precio E</th>
+                    <th class="text-uppercase text-center">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- iterate over the details -->
+                  <% db_bill.details.forEach((detail, index) => { %>
+                  <tr>
+                    <% let subtotal = (detail.unitary_price * detail.quantity +
+                    (detail.extra_price? 0: detail.extra_price)) %>
+                    <td scope="row" class="text-center text-uppercase">
+                      <%=detail.pledge_name%>
+                    </td>
+                    <td class="text-center text-uppercase"><%=detail.size%></td>
+                    <td class="text-center">
+                      <%=detail.unitary_price.toFixed(2)%>
+                    </td>
+                    <td class="text-center"><%=detail.quantity%></td>
+                    <td class="text-center text-uppercase">
+                      <%=(!detail.detail && !detail.extra_price) ? 'no': 'si'%>
+                    </td>
+                    <td class="text-center">
+                      <%=!detail.extra_price? '0.00':
+                      detail.extra_price.toFixed(2)%>
+                    </td>
+                    <td class="text-center"><%=subtotal.toFixed(2)%></td>
+                    <!-- add to total variable -->
+                    <% total += subtotal; %>
+                  </tr>
+                  <% }); %>
+                  <!-- TOTAL VALUE FOR TABLE -->
+                  <tr>
+                    <td
+                      scope="row"
+                      class="text-uppercase text-center"
+                      colspan="6"
+                    >
+                      TOTAL
+                    </td>
+                    <td class="text-center"><%=total.toFixed(2)%></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>

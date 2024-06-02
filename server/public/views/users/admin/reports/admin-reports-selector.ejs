@@ -1,0 +1,81 @@
+<!-- views/admin-users.ejs -->
+<section>
+  <div>
+    <h2 class="text-uppercase text-center">Reportes de administrador</h2>
+    <div class="alert alert-info" role="alert">
+      <strong>info</strong> selecciona el tipo de reporte, puedes filtrar por
+      fechas
+    </div>
+  </div>
+
+  <!-- BUILDINGS END -->
+  <!-- Horizontal split line -->
+  <div class="row">
+    <div class="col">
+      <hr class="split-line" />
+    </div>
+  </div>
+
+  <div class="mb-5">
+    <h2 class="mb-2 text-center">Selector de reportes</h2>
+    <div class="container mb-5">
+      <form action="/admin/report/generate" method="POST">
+        <!-- DATES SELECTOR -->
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="initDate">Fecha inicial</label>
+              <input
+                type="date"
+                class="form-control"
+                name="initDate"
+                id="initDate"
+                aria-describedby="initDataSmall"
+                placeholder="Fecha dd/mm/yyyy"
+              />
+              <small id="initDataSmall" class="form-text text-muted"
+                >Déjala vacía para excluir esta fecha</small
+              >
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="endDate">Fecha final</label>
+              <input
+                type="date"
+                class="form-control"
+                name="endDate"
+                id="endDate"
+                aria-describedby="endDateSmall"
+                placeholder="endDate"
+              />
+              <small id="endDateSmall" class="form-text text-muted"
+                >Deja vacía para excluir esta fecha</small
+              >
+            </div>
+          </div>
+        </div>
+        <!-- REPORT SELECT -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="reportType">Tipo de reporte</label>
+              <select
+                class="form-control"
+                name="reportType"
+                id="reportType"
+                required
+              >
+                <option selected disabled>-- SELECCIONAR --</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Solicitar reporte</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM SCRIPT -->
+<script src="/js/admin/admin-report-selector.js"></script>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>ADMIN | PROD TALLAS</title>
+
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/admin/list-inventory.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- ASIDE -->
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <div>
+            <%- include("../../../partials/messages.ejs", {message: message,
+            error_message: error_message})%>
+          </div>
+          <div>
+            <div class="mt-5">
+              <h1 class="text-center text-uppercase">Inventario por tallas</h1>
+              <p class="text-center">
+                Aca puedes eliminar, editar y ver todos los productos que tienes
+                y por tallas. Puedes borrarlos, pero solamente si es algo que
+                nunca se haya vendido, caso contrario, el registro sera
+                permanente
+              </p>
+              <!-- DISPLAY VALUES FROM DB DYNAMICALLY -->
+              <div>
+                <% data.forEach(_product=> { %>
+                <div class="card mt-5">
+                  <div class="card-header">
+                    Producto con id <%= _product.Pledge_id %>
+                  </div>
+                  <div class="card-body">
+                    <h4 class="card-title"><%= _product.name %></h4>
+                    <div class="d-none hide-table-panel">
+                      <div
+                        class="d-flex table-responsive justify-content-center mt-4"
+                      >
+                        <table class="table table-striped">
+                          <thead class="thead-dark">
+                            <tr>
+                              <th class="text-uppercase text-center id-column">
+                                TALLA
+                              </th>
+                              <th
+                                class="text-uppercase text-center name-column"
+                              >
+                                PRECIO
+                              </th>
+                              <th
+                                class="text-uppercase center-text actions-column"
+                              >
+                                ACCIONES
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% _product.products.forEach(_prod_row=> { %>
+                            <tr>
+                              <td class="center-text">
+                                <%= _prod_row.Size_id %>
+                              </td>
+                              <td class="center-text">
+                                <%= _prod_row.price %>
+                              </td>
+                              <td>
+                                <div class="action-buttons row mx-2">
+                                  <!-- Button trigger modal -->
+                                  <a
+                                    name="link-edit-inventory"
+                                    class="btn btn-primary edit-btn col mx-1 update-btn"
+                                    href="/admin/load-inventory/edit/<%=_product.Pledge_id%>/<%=_prod_row.Size_id%>"
+                                    role="button"
+                                    >Editar</a
+                                  >
+                                  <a
+                                    name="link-delete-inventory"
+                                    class="btn btn-danger delete-btn col mx-1"
+                                    href="/admin/load-inventory/delete/<%=_product.Pledge_id%>/<%=_prod_row.Size_id%>"
+                                    role="button"
+                                    >Borrar</a
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-muted">
+                    <!-- BUTTON TO EXPAND OR HIDE CONTENT -->
+                    <button
+                      type="button"
+                      class="btn btn-outline-info toggle-button"
+                    >
+                      Expandir
+                    </button>
+                  </div>
+                </div>
+                <% }) %>
+              </div>
+            </div>
+            <!-- MODALS section -->
+            <div>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="updateModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="modelTitleId"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edición de Inventario</h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Edita el precio del producto seleccionado</p>
+                      <form
+                        action="/admin/load-inventory/update/"
+                        method="POST"
+                      >
+                        <!-- HIDDEN INPUTS FOR NON EDITABLE -->
+                        <input type="hidden" name="Pledge_id" id="Pledge_id" />
+                        <input type="hidden" name="Size_id" id="Size_id" />
+                        <!-- NON EDITABLE INPUTS -->
+                        <div class="form-group">
+                          <label for="id-product-display">ID</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="id-product-display"
+                            id="id-product-display"
+                            aria-describedby="id-product-display-small"
+                            placeholder="id del producto"
+                            disabled
+                          />
+                          <small
+                            id="id-product-display-small"
+                            class="form-text text-muted"
+                            >ID de la prenda, no se puede editar</small
+                          >
+                        </div>
+                        <div class="form-group">
+                          <label for="pledge-name">Nombre</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="pledge-name"
+                            id="pledge-name"
+                            aria-describedby="pledge-name-small"
+                            placeholder="Nombre de la prenda"
+                            disabled
+                          />
+                          <small
+                            id="pledge-name-small"
+                            class="form-text text-muted"
+                            >Nombre de la prenda, no se puede editar en esta
+                            vista</small
+                          >
+                        </div>
+                        <div class="form-group">
+                          <label for="pledge-size-display">Talla</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="pledge-size-display"
+                            id="pledge-size-display"
+                            aria-describedby="pledge-size-display-small"
+                            placeholder="Talla de la prenda"
+                            disabled
+                          />
+                          <small
+                            id="pledge-size-display-small"
+                            class="form-text text-muted"
+                            >Talla de la prenda, no se puede editar en esta
+                            vista</small
+                          >
+                        </div>
+                        <div class="form-group">
+                          <label for="price">Precio</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="price"
+                            id="price"
+                            aria-describedby="pledge-price-small"
+                            placeholder="Precio de la prenda"
+                            required
+                          />
+                          <small
+                            id="pledge-price-small"
+                            class="form-text text-muted"
+                            >Ingresa el nuevo precio de la prenda</small
+                          >
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                          Guardar
+                        </button>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary">
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/admin/list-inventory.js"></script>

@@ -1,0 +1,215 @@
+<section>
+
+  <!-- views/admin/admin-users.ejs -->
+  <h2 class="text-uppercase text-center">Panel de existencias</h2>
+  <p class="text-center text-muted ">
+    Aca podrá crear listar eliminar o editar productos, edificios y existencias
+  </p>
+
+  <div class="container">
+    <!-- BUILDINGS INIT -->
+    <div>
+      <h3 class="text-uppercase mt-4">Edificios</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <h4 class="center-text">Nuevo edificio</h4>
+          <p>Ingrese el nombre y la ubicación del edificio</p>
+          <form action="/admin/insert-building" method="POST">
+            <div class="form-group">
+              <label for="building_name">Nombre</label>
+              <input
+                type="text"
+                class="form-control"
+                name="building_name"
+                id="building_name"
+                aria-describedby="building-id"
+                placeholder="nombre del edificio"
+                required
+              />
+              <small id="building-id" class="form-text text-muted"
+                >Ingresa el nombre del edificio</small
+              >
+            </div>
+            <div class="form-group">
+              <label for="building_direction">Ubicación</label>
+              <input
+                type="text"
+                class="form-control"
+                name="building_direction"
+                id="building_direction"
+                aria-describedby="building_direction"
+                placeholder="ubicación xxx"
+              />
+              <small id="building_direction" class="form-text text-muted"
+                >Ingresa la dirección donde se encuentra el edificio</small
+              >
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h4 class="center-text">Listado de edificios</h4>
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active"
+              >EDIFICIOS</a
+            >
+            <% buildings.forEach(building=> { %>
+            <a
+              href="/admin/edit-building/<%=building.id%>"
+              class="list-group-item list-group-item-action"
+            >
+              <%=building.name%>
+            </a>
+            <% }) %>
+            <a href="#" class="list-group-item list-group-item-action disabled"
+              >Selecciona un edificio para editarlo</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- BUILDINGS END -->
+    <!-- Horizontal split line -->
+    <div class="row mt-4">
+      <div class="col">
+        <hr class="split-line" />
+      </div>
+    </div>
+    <!-- end horizontal split line -->
+    <!-- PLEDGES INIT  -->
+    <div>
+      <h3 class="mt-4">Prendas</h3>
+      <p class="subtitle">Aca podrá ver todo lo relacionado con las prendas</p>
+      <div class="row">
+        <div class="col-md-4">
+          <h4 class="center-text">Prenda</h4>
+          <a
+            name="load-pledges-btn"
+            id="load-pledges-btn"
+            class="btn btn-outline-primary w-100"
+            href="/admin/load-pledges"
+            role="button"
+            >listar</a
+          >
+        </div>
+        <div class="col-md-4">
+          <h4 class="center-text">Inventario</h4>
+          <a
+            name="load-inventory-btn"
+            id="load-inventory-btn"
+            class="btn btn-outline-primary w-100"
+            href="/admin/load-inventory"
+            role="button"
+            >listar</a
+          >
+        </div>
+        <div class="col-md-4">
+          <h4 class="center-text">Stock</h4>
+          <a
+            name="load-products-link"
+            id="load-products-link"
+            class="btn btn-outline-primary w-100"
+            href="/admin/load-products"
+            role="button"
+            >listar</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- PLEDGE END -->
+    <!-- Horizontal split line -->
+    <div class="row">
+      <div class="col">
+        <hr class="split-line" />
+      </div>
+    </div>
+
+    <div>
+      <h4 class="center-text">Creación de prendas</h4>
+      <p class="subtitle">Crea una nueva prenda y asigna precios por tallas</p>
+      <div>
+        <form action="/admin/load-products/create" id="pledge-create-form">
+          <div class="row">
+            <!-- CHECKBOX SELECTOR, SHOW A INPUT IF SELECTED, HIDE IF UNSELECTED -->
+            <!-- CHECKBOX SELECTOR -->
+            <div class="col-md-5">
+              <% _data.sizes.forEach(_size=> { %>
+              <div class="row">
+                <!-- CHECKBOX -->
+                <div class="form-group col-sm-2">
+                  <div class="form-check">
+                    <!-- Use a unique ID for each checkbox -->
+                    <input
+                      class="form-check-input unhide-size-input"
+                      type="checkbox"
+                      id="showInput<%= _size.id %>"
+                      value="<%=_size.id%>"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="showInput<%= _size.id %>"
+                    >
+                      <%= _size.id %>
+                    </label>
+                  </div>
+                </div>
+                <!-- INPUT -->
+                <!-- Use a unique ID for each input container -->
+                <div
+                  id="inputContainer<%= _size.id %>"
+                  class="d-none col-lg-10"
+                >
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label for="price-product<%= _size.id %>">Precio</label>
+                      <!-- Use a unique ID for each input -->
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="price-product<%= _size.id %>"
+                        id="price-product<%= _size.id %>"
+                        aria-describedby="price-product-small<%= _size.id %>"
+                        placeholder="100.00"
+                      />
+                      <small
+                        id="price-product-small<%= _size.id %>"
+                        class="form-text text-muted"
+                        >Precio para la talla <%= _size.id %></small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% }); %>
+            </div>
+            <!-- NAME PART -->
+            <div class="col-md-7">
+              <div class="form-group">
+                <label for="new_pledge_name">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="new_pledge_name"
+                  id="new_pledge_name"
+                  aria-describedby="helpId"
+                  placeholder="Nombre para la nueva prenda"
+                  required
+                />
+                <small id="helpId" class="form-text text-muted"
+                  >Nombre para la nueva prenda</small
+                >
+              </div>
+              <button type="submit" class="btn btn-light btn-lg btn-block">
+                Guardar
+              </button>
+            </div>
+          </div>
+        </form>
+        <p>Crea una nueva prenda y configura los precios y tallas</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/bootstrap.js"></script>
+  <script src="/js/admin/admin-products.js"></script>
+</section>

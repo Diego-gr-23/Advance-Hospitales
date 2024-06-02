@@ -1,0 +1,56 @@
+<aside class="col-lg-3 col-md-4 col-sm-12 aside">
+  <div class="aside-content">
+    <div class="sidebar-sticky pt-4">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="/sells/stock/search/"> Venta </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/sells/clients/"> Clientes </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/sells/dashboard/"> Facturas </a>
+        </li>
+        <!-- Divider -->
+        <hr class="my-2" />
+        <!-- New item with collapse functionality -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="collapse"
+            href="#collapseStock"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseStock"
+            >Existencias</a
+          >
+          <div class="collapse" id="collapseStock">
+            <ul class="nav flex-column ml-3">
+              <li class="nav-item">
+                <a class="nav-link disabled" href="/sells/dashboard/orders"
+                  >Pedidos</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled href="#">Envíos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/sells/stock/check">Otras tiendas</a>
+              </li>
+              <!-- Add more sub items here if needed -->
+            </ul>
+          </div>
+        </li>
+        <!-- CARRITO COMPRAS -->
+        <li class="nav-item">
+          <a class="nav-link" href="/sells/cart/list"> Carrito </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/custom.js"></script>
+<!-- Bootstrap JS and dependencies -->

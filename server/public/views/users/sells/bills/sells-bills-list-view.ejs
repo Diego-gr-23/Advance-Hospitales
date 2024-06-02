@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Vista de vendedor</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/sells-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-5">
+          <div>
+            <h1 class="text-center text-uppercase">Facturas encontradas</h1>
+            <p class="text-center">
+              Revisa la información sobre la factura que has encontrado, anula,
+            </p>
+            <div>
+              <%- include("../../../partials/messages.ejs", {message: message,
+              error_message: error_message})%>
+            </div>
+          </div>
+          <section class="mt-4">
+            <!-- TABLE TO DISPLAY VALUES FROM DB, TABLE HEADS: NIT, NAME, DIRECTION, ACTIONS (FOR BUTTONS) -->
+            <!-- ACCESS VIA VARIABLE bills.forEach -->
+            <table class="table table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th class="text-uppercase text-center text-uppercase">ID</th>
+                  <th class="text-uppercase text-center text-uppercase">NIT</th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Total (GTQ)
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    fecha
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    anulada
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Por pedido
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    trabajador
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% bills.forEach(_bill => { %>
+                <tr  class="<%=_bill.cancelled? 'table-warning': ''%>">
+                  <td class="text-uppercase text-right" scope="row">
+                    <%=_bill.id %>
+                  </td>
+                  <td><%=_bill.Client_NIT%></td>
+                  <td class="text-center"><%=_bill.total.toFixed(2)%></td>
+                  <td class="text-center"><%=formatDate(_bill.date)%></td>
+                  <td class="text-uppercase text-center">
+                    <%=_bill.cancelled ? 'si' : 'no'%>
+                  </td>
+                  <td class="text-uppercase text-center">
+                    <%=!_bill.Order_id ? 'NO' : 'si'%>
+                  </td>
+                  <td class="text-uppercase text-center">
+                    <%=_bill.Worker_id%>
+                  </td>
+                  <td style="width: 15%">
+                    <!-- BUTTON ACTION, EDIT AND DELETE -->
+                    <div class="action-buttons d-flex justify-content-around">
+                      <!-- display modal to fetch data and then display modal -->
+                      <a
+                        class="btn btn-outline-primary edit-btn edit-bill-btn text-uppercase"
+                        role="button"
+                        href="/sells/bills/detail/<%=_bill.id%>"
+                      >
+                        Detalle
+                      </a>
+                      <% if(_bill.date >= new Date(new Date() - 7 * 24 * 3600 *
+                      1000) && !_bill.cancelled) { %>
+                      <a
+                        class="btn btn-danger text-uppercase"
+                        href="/sells/bills/cancel/<%=_bill.id%>"
+                        role="button"
+                        >anular</a
+                      >
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/sells/sells-clients-list.js"></script>

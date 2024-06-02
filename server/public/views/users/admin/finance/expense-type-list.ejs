@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>ADMIN | TIPO GASTO</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- ASIDE -->
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <div>
+            <%- include("../../../partials/messages.ejs", {message: message,
+            error_message: error_message})%>
+          </div>
+          <div>
+            <div>
+              <div>
+                <h1 class="mt-5 mb-3 text-uppercase text-center">
+                  Listado de tipos de gasto
+                </h1>
+                <p class="text-center">
+                  Aca puedes eliminar, editar y ver todos los tipos de gasto que
+                  tienes.
+                </p>
+              </div>
+              <!-- DISPLAY VALUES FROM DB DYNAMICALLY FOR data.expenses_type-->
+              <!-- TABLE HEADER -->
+              <div class="row d-flex justify-content-center table-responsive">
+                <!-- TABLE -->
+                <table class="table table-striped">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th class="text-uppercase center-text w-25">CÓDIGO</th>
+                      <th class="text-uppercase center-text">NOMBRE</th>
+                      <th class="text-uppercase center-text w-25">ACCIONES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% data.expenses_type.forEach(_expense_type=> { %>
+                    <tr>
+                      <td class="center-text"><%= _expense_type.id %></td>
+                      <td><%= _expense_type.name %></td>
+                      <td>
+                        <div class="action-buttons row mx-2">
+                          <!-- display modal to fetch data and then display modal -->
+                          <button
+                            class="btn btn-outline-warning edit-btn col mx-1 edit-expense-type-btn"
+                            data-parameter="<%=_expense_type.id%>"
+                          >
+                            Editar
+                          </button>
+                          <a
+                            name="link-delete-expense-type"
+                            class="btn btn-danger col mx-1"
+                            href="/admin/finance/delete/expense-type/<%=_expense_type.id%>"
+                            role="button"
+                            >Borrar</a
+                          >
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- MODALS section -->
+            <div>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="editExpenseTypeModal"
+                tabindex="-1"
+                aria-labelledby="editExpenseTypeModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="editExpenseTypeModalLabel">
+                        Editar Tipo de Gasto
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form
+                      id="editExpenseTypeForm"
+                      method="POST"
+                      action="/admin/finance/update/expense-type/"
+                    >
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="expenseTypeId">Código</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="expense_id"
+                            id="expenseTypeId"
+                            aria-describedby="expenseTypeIdSmall"
+                            placeholder="Código de tipo de gasto"
+                            required
+                            readonly
+                          />
+                          <small
+                            id="expenseTypeIdSmall"
+                            class="form-text text-muted"
+                            >El código no puede ser editado</small
+                          >
+                        </div>
+                        <div class="form-group">
+                          <label for="expenseTypeName">Nombre</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="expense_name"
+                            id="expenseTypeName"
+                            aria-describedby="expenseTypeName"
+                            placeholder="Nuevo nombre del tipo de gasto"
+                          />
+                          <small
+                            id="expenseTypeName"
+                            class="form-text text-muted"
+                            >Ingresa el nuevo nombre del tipo de gasto</small
+                          >
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal"
+                        >
+                          Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                          Guardar
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<script src="/js/bootstrap.js"></script>
+<script src="/js/admin/list-expense-type.js"></script>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Vista de vendedor</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/admin/admin-view.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/sells-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-2 pt-5">
+          <div>
+            <h1 class="text-uppercase text-center">Clientes</h1>
+            <p>Edita, modifica o lista clientes de la aplicación.</p>
+            <div>
+              <%- include("../../../partials/messages.ejs", {message: message,
+              error_message: error_message})%>
+            </div>
+          </div>
+
+          <section class="container container-fluid mt-4">
+            <h2>Creación de nuevo usuario</h2>
+            <form
+              action="/sells/clients/create"
+              method="post"
+              class="container mb-3"
+            >
+              <div class="row d-flex justify-content-between">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="client_name">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="client_name"
+                      id="client_name"
+                      aria-describedby="client_name_small"
+                      placeholder="Nombre del cliente"
+                      required
+                    />
+                    <small id="client_name_small" class="form-text text-muted"
+                      >Ingresa el nombre del nuevo cliente</small
+                    >
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="client_nit">NIT</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="client_nit"
+                      id="client_nit"
+                      aria-describedby="client_nit_small"
+                      placeholder="123456789"
+                      maxlength="10"
+                      required
+                    />
+                    <small id="client_nit_small" class="form-text text-muted"
+                      >NIT del cliente (no lo puedes dejar vacío)</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="client_address">Dirección</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="client_address"
+                  id="client_address"
+                  aria-describedby="client_address_small"
+                  placeholder="ej. Ciudad"
+                />
+                <small id="client_address_small" class="form-text text-muted"
+                  >Ingresa la dirección del usuario (vacío para ciudad)</small
+                >
+              </div>
+              <div class="d-flex justify-content-center">
+                <div class="form-group">
+                  <label for="client_phone_number">Numero de celular</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="client_phone_number"
+                    id="client_phone_number"
+                    aria-describedby="client_phone_number_small"
+                    placeholder="+502 0000 0000"
+                    required
+                    min="10000000"
+                    max="999999999"
+                    step="1"
+                  />
+                  <small
+                    id="client_phone_number_small"
+                    class="form-text text-muted"
+                    >Ingresa el no. de teléfono, sin espacios ni +502</small
+                  >
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block mt-3">
+                Registrar
+              </button>
+            </form>
+          </section>
+          <!-- SPLIT LINE -->
+          <!-- Horizontal split line -->
+          <div class="row">
+            <div class="col">
+              <hr class="split-line" />
+            </div>
+          </div>
+          <!-- DIV TO DISPLAY EXTRA ACTIONS -->
+          <section class="container mt-2 mb-4" id="summary">
+            <P>Otras acciones</P>
+            <div class="row d-flex justify-content-between">
+              <a
+                name="clients_list_all_btn"
+                id="clients_list_all_btn"
+                class="btn btn-info mb-4"
+                href="/sells/clients/list/all"
+                role="button"
+                >Listar todos los clientes</a
+              >
+              <form
+                class="form-inline mb-4"
+                action="/sells/clients/search"
+                method="POST"
+              >
+                <div class="form-group">
+                  <label for="client_nit" class="mr-2">Usuario</label>
+                  <input
+                    type="text"
+                    name="client_nit"
+                    id="client_nit"
+                    class="form-control"
+                    placeholder="NIT 12345678"
+                    aria-describedby="client_nit_small"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-info">Buscar</button>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->

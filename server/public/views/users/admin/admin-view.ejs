@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>ADMINISTRADOR</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <nav><%- include("../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../partials/asides/admin-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-5">
+          <div>
+            <%- include("../../partials/messages.ejs", {message: message,
+            error_message: error_message})%>
+          </div>
+          <div>
+            <% if (view==='products' ) { %>
+            <!-- Admin Products Panel -->
+            <div id="adminProducts" class="hide-me-panel">
+              <%- include("admin-products", { buildings: data.buildings })%>
+            </div>
+            <div>
+              <% } else if (view==='users' ) {%>
+              <!-- Admin Users Panel -->
+              <div id="adminUsers" class="hide-me-panel">
+                <%- include("admin-users")%>
+              </div>
+            </div>
+            <div>
+              <% } else if (view=='finance' ) {%>
+              <!-- Admin Finance Panel -->
+              <div id="adminFinance" class="hide-me-panel">
+                <%- include("admin-finance")%>
+              </div>
+            </div>
+            <div>
+              <% } else if (view=='reports' ) { %>
+              <!-- Admin Finance Panel -->
+              <div id="adminReports" class="hide-me-panel">
+                <%- include("./reports/admin-reports-selector")%>
+              </div>
+            </div>
+            <div>
+              <% } else {%>
+              <!-- INVALID VIEW PARAMETER -->
+              <div id="adminInvalid" class="hide-me-panel">
+                <h2>Panel de administrador</h2>
+                <div class="alert alert-info" role="alert">
+                  <strong>info</strong> Estas accediendo a una pestaña no
+                  valida, selecciona una opción del menu para continuar
+                </div>
+                <p>Selecciona una opción del menú para continuar</p>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>

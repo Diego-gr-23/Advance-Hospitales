@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Navigation</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+  <body>
+    <!-- NAVIGATION -->
+    <div><%- include("../../partials/nav.ejs")%></div>
+
+    <body>
+      <div class="container-fluid">
+        <div class="row">
+          <div><%- include("../../partials/asides/production-aside") %></div>
+
+          <!-- Main content area -->
+          <main role="main" class="col-lg-9 px-4 m-auto pt-5">
+            <h1 class="text-center text-uppercase">Confirmación nuevo stock</h1>
+            <div>
+              <%- include("../../partials/messages.ejs", {message: message,
+              error_message: error_message})%>
+            </div>
+            <section class="mt-5">
+              <% stock_session.forEach(stock_tmp => { %>
+              <!-- SECTION TO DISPLAY ALL PRODUCTS AND SEARCH TABLE -->
+              <div class="card text-center mb-5">
+                <div class="card-header">
+                  <ul class="nav nav-pills card-header-pills m-auto">
+                    <li class="nav-item mr-2">
+                      <a
+                        class="nav-link btn-success"
+                        href="/production/stock/increase/<%=stock_tmp.id%>/<%=stock_tmp.size%>"
+                        >+1</a
+                      >
+                    </li>
+                    <li class="nav-item mr-2">
+                      <a
+                        class="nav-link btn-warning"
+                        href="/production/stock/decrease/<%=stock_tmp.id%>/<%=stock_tmp.size%>"
+                        >-1</a
+                      >
+                    </li>
+                    <li class="nav-item mr-2">
+                      <a
+                        class="nav-link active btn-danger"
+                        href="/production/stock/delete/<%=stock_tmp.id%>/<%=stock_tmp.size%>"
+                        >Borrar</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th class="text-center text-uppercase">ID</th>
+                        <th class="text-center text-uppercase">NOMBRE</th>
+                        <th class="text-center text-uppercase">TALLA</th>
+                        <th class="text-center text-uppercase">CANTIDAD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row"><%=stock_tmp.id%></td>
+                        <td><%=stock_tmp.name%></td>
+                        <td><%=stock_tmp.size%></td>
+                        <td><%=stock_tmp.ammount%></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <% }) %>
+            </section>
+            <!-- CONFIRM BUTTON -->
+            <div class="text-center">
+              <a href="/production/stock/confirm" class="btn btn-success"
+                >Confirmar ingresos</a
+              >
+            </div>
+          </main>
+        </div>
+      </div>
+    </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+  </body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Vista de vendedor</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <div><%- include("../../partials/nav.ejs")%></div>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../partials/asides/sells-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-2">
+          <div>
+            <%- include("../../partials/messages.ejs", {message: message,
+            error_message: error_message})%>
+          </div>
+          <section class="mt-5">
+            <!-- DISPLAY OPTIONS FOR BILLS -->
+            <h1 class="text-center text-uppercase">Facturas</h1>
+            <div class="row mt-3">
+              <!-- DISPLAY LAST 3 BILLS MADE BY CURRENT USER -->
+              <div class="col-md-6">
+                <div class="alert alert-light" role="alert">
+                  Ultimas 5 facturas realizadas por <strong><%=name%></strong>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th class="text-uppercase text-center w-20">Factura</th>
+                        <th class="text-uppercase text-center">Valor (GTQ)</th>
+                        <th class="text-uppercase text-center w-20">Fecha</th>
+                        <th class="text-uppercase text-center w-10"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% bills.forEach(bill => { %>
+                      <tr>
+                        <td class="text-left" scope="row"><%=bill.id%></td>
+                        <td class="text-right"><%=bill.total%></td>
+                        <td class="text-center"><%=formatDate(bill.date)%></td>
+                        <td>
+                          <a
+                            name=""
+                            id=""
+                            class="btn btn-outline-primary btn-sm text-lowercase"
+                            href="/sells/bills/list/<%=bill.id%>"
+                            role="button"
+                          >
+                            i
+                          </a>
+                        </td>
+                      </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- DISPLAY OPTIONS TO SEARCH OR LIST BILLS -->
+              <div class="col-md-6">
+                <div class="alert alert-info" role="alert">
+                  <strong>info</strong> Buscar o listar facturas
+                </div>
+                <!-- FORM TO SEARCH BILLS -->
+                <form action="/sells/bills/list/" method="POST">
+                  <div class="form-group">
+                    <label for="data_search">Dato a buscar</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="data_search"
+                      id="data_search"
+                      aria-describedby="data_search_small"
+                      placeholder="Dato a buscar ej. nit"
+                      required
+                    />
+                    <small id="data_search_small" class="form-text text-muted"
+                      >Atributo a buscar (selecciona el tipo de búsqueda)</small
+                    >
+                  </div>
+                  <div class="form-group">
+                    <label for="search_type">Tipo de búsqueda</label>
+                    <select
+                      class="custom-select"
+                      name="search_type"
+                      id="search_type"
+                      required
+                    >
+                      <option selected disabled>-- SELECCIONAR --</option>
+                      <% for (let search_key in search_types) {%>
+                      <option value="<%=search_types[search_key]%>">
+                        <%=search_types[search_key]%>
+                      </option>
+                      <% } %>
+                    </select>
+                  </div>
+                  <div class="row d-flex justify-content-center">
+                    <div class="col-md-4">
+                      <button
+                        type="submit"
+                        class="btn btn-primary btn-block text-uppercase"
+                      >
+                        Buscar
+                      </button>
+                    </div>
+                    <div class="col-md-4">
+                      <a
+                        name=""
+                        id=""
+                        class="btn btn-outline-primary btn-block text-uppercase"
+                        href="/sells/bills/list/all"
+                        role="button"
+                        >Listar todos</a
+                      >
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/admin/admin-view.js"></script>

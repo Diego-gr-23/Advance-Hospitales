@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Edición de edificios</title>
+
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- ASIDE -->
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <div></div>
+          <div class="container">
+            <h1>Edición de edificio</h1>
+            <p>
+              Recuerda que el edificio puede ser el punto de venta o la misma
+              fabrica, el campo ID no puede ser editado, el nombre debe ser
+              único
+            </p>
+
+            <div></div>
+
+            <form action="/admin/update-building" method="POST">
+              <div class="form-group">
+                <label for="building_id">Id</label>
+                <!-- Hidden input field to store building_id -->
+                <input
+                  type="hidden"
+                  name="building_id"
+                  value="<%=building.id%>"
+                />
+                <!-- Visible input field for display purposes only -->
+                <input
+                  type="text"
+                  class="form-control"
+                  id="building_id_test"
+                  aria-describedby="building_id_test"
+                  placeholder="ID del edificio"
+                  disabled
+                  value="<%=building.id%>"
+                />
+                <small id="building_id_test" class="form-text text-muted"
+                  >ID del edificio, no se debe editar</small
+                >
+              </div>
+              <div class="form-group">
+                <label for="building_name">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="building_name"
+                  id="building_name"
+                  aria-describedby="building_bame"
+                  placeholder="Nombre del edificio"
+                  value="<%=building.name%>"
+                  required
+                />
+                <small id="building_bame" class="form-text text-muted"
+                  >Nombre del edificio</small
+                >
+              </div>
+              <div class="form-group">
+                <label for="building_direction">Dirección</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="building_direction"
+                  id="building_direction"
+                  aria-describedby="building_direction_a"
+                  placeholder="Dirección del edificio"
+                  value="<%=building.direction%>"
+                />
+                <small id="building_direction_a" class="form-text text-muted"
+                  >Dirección del edificio</small
+                >
+              </div>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+              <a
+                name="delete-building"
+                id="delete-building"
+                class="btn btn-danger"
+                href="/admin/delete-building/<%=building.id%>"
+                role="button"
+                >Borrar</a
+              >
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>

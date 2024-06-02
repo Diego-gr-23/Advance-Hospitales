@@ -1,0 +1,44 @@
+.w-10 {
+  width: 10% !important;
+}
+
+.w-20 {
+  width: 20% !important;
+}
+
+.w-85 {
+  width: 85% !important;
+}
+
+/* Custom CSS */
+.navbar-brand {
+  /* bold  */
+  font-weight: bold;
+}
+.aside-content {
+  margin-top: 40px;
+  padding: 15px;
+  position: fixed; /* Fix the aside position */
+  top: 0; /* Initially position it at the top */
+  height: 100%; /* Make it take full height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.split-line {
+  border-right: 1px solid #dee2e6;
+}
+
+@media (max-width: 768px) {
+  /* Move the aside to the top on small screens */
+  .aside {
+    order: -1; /* Change the order to move it to the top */
+  }
+  .split-line {
+    display: none; /* Hide the split line on small screens */
+  }
+}
+
+p strong {
+  font: bold;
+}

@@ -1,0 +1,236 @@
+<!-- products.ejs -->
+
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/admin/list-products.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    <title>ADMIN | STOCK TIENDAS</title>
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <h1 class="text-uppercase text-center mt-3">
+            Productos por existencia y edificio
+          </h1>
+          <div><%- include("../../../partials/messages.ejs")%></div>
+
+          <div class="mt-5">
+            <!-- PRODUCT DIV -->
+            <div>
+              <% data.stockable_pile.forEach((product)=> { %>
+              <div class="mb-5">
+                <!-- Display Product Name -->
+                <div class="jumbotron">
+                  <h3 class="display-4"><%- product.name %></h3>
+                  <!-- Button to Toggle Building Details -->
+                  <button
+                    class="btn btn-primary"
+                    onclick="toggleBuildings('<%- product.id %>')"
+                    id="toggleButton<%- product.id %>"
+                  >
+                    Expandir
+                  </button>
+                </div>
+                <div>
+                  <!-- Container for Buildings -->
+                  <div
+                    id="<%- product.id %>Buildings"
+                    class="row"
+                    style="display: none"
+                  >
+                    <div class="row d-flex justify-content-center">
+                      <div class="row w-75">
+                        <% product.locations.forEach((location, index)=> { %>
+                        <div class="col-md-6 mb-4">
+                          <div class="card-group">
+                            <!-- Each building takes up 6 columns on medium-sized screens and larger -->
+                            <div class="card">
+                              <div class="card-header">
+                                <h5 class="mb-0"><%- location.name %></h5>
+                              </div>
+                              <div class="card-body">
+                                <!-- Display Sizes and Stock for each Building -->
+                                <!-- Apply custom style if stock is lower than 5 -->
+                                <% location.availability.forEach((item)=> { %>
+                                <div class="row list-editable mb-1">
+                                  <div class="col-md-6">
+                                    <p
+                                      class="card-text <%= item.stock < 5 ? 'low-stock' : '' %>"
+                                    >
+                                      Talla: <%- item.size %>, Disponibilidad:
+                                      <%- item.stock %>
+                                    </p>
+                                  </div>
+                                  <div class="col-md-6 text-md-right">
+                                    <a
+                                      name=""
+                                      id=""
+                                      class="btn btn-primary edit-link-ref"
+                                      href="/admin/load-products/edit-product/<%=location.id%>/<%=product.id%>/<%=item.size%>"
+                                      role="button"
+                                      >Editar</a
+                                    >
+                                  </div>
+                                </div>
+                                <% }); %>
+                              </div>
+                              <!-- END AVAILABILITY -->
+                            </div>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                      <!-- END LOCATIONS -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- END PRODUCTS -->
+              <% }); %>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="modelId"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modelTitleId"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edición de stock</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/admin/load-products/update-product" method="POST">
+              <div class="form-group">
+                <!-- hidden inputs for ID to send at backend -->
+                <input
+                  type="text"
+                  class="form-control"
+                  name="building_id"
+                  id="building_id"
+                  aria-describedby="building_id"
+                  placeholder="building Id"
+                  hidden
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  name="pledge_id"
+                  id="pledge_id"
+                  aria-describedby="pledge_id"
+                  placeholder="pledge_id"
+                  hidden
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  name="size_id"
+                  id="size_id"
+                  aria-describedby="size_id"
+                  placeholder="size_id"
+                  hidden
+                />
+                <!-- non editable values -->
+                <div class="form-group">
+                  <label for="pledge_name">Prenda</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="pledge_name"
+                    id="pledge_name"
+                    aria-describedby="pledge_name_s"
+                    placeholder="Nombre Prenda"
+                    disabled
+                  />
+                  <small id="pledge_name_s" class="form-text text-muted"
+                    >El nombre de la prenda</small
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="building_name">Nombre del edificio</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="building_name"
+                    id="building_name"
+                    aria-describedby="building_name"
+                    placeholder="Nombre edificio"
+                    disabled
+                  />
+                  <small id="building_name" class="form-text text-muted"
+                    >Nombre del edificio</small
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="stock">Existencia</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="stock"
+                    id="stock"
+                    aria-describedby="stock_small"
+                    placeholder="Existencia"
+                    required
+                  />
+                  <small id="stock_small" class="form-text text-muted"
+                    >No. de prendas que hay en el edificio</small
+                  >
+                </div>
+              </div>
+              <button type="submit" class="btn btn-warning">Guardar</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <p>Recuerda que solo puedes editar las existencias</p>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<script src="/js/bootstrap.js"></script>
+<script src="/js/admin/list-products.js"></script>
+<script
+  src="https://kit.fontawesome.com/c3025f5f48.js"
+  crossorigin="anonymous"
+></script>

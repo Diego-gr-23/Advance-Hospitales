@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>ADMIN | PRODUCTOS</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    <!-- Add your additional CSS styles here if needed -->
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- ASIDE -->
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <div>
+            <%- include("../../../partials/messages.ejs", {message: message,
+            error_message: error_message})%>
+          </div>
+          <div>
+            <div>
+              <h1 class="text-center text-uppercase mt-4">
+                Listado de productos
+              </h1>
+              <p class="text-center">
+                Aca puedes eliminar, editar y ver todos los productos que
+                tienes. Pero solamente si es algo que nunca se haya vendido, de
+                lo contrario, el registro sera permanente
+              </p>
+              <!-- DISPLAY VALUES FROM DB DYNAMICALLY -->
+              <div class="table-responsive d-flex justify-content-center">
+                <table class="table table-striped w-75">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th class="text-uppercase text-center w-10">ID</th>
+                      <th class="text-uppercase text-center">NOMBRE</th>
+                      <th class="text-uppercase text-center w-25">ACCIONES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% data.forEach(_prod_row=> { %>
+                    <tr>
+                      <td class="text-right"><%= _prod_row.id %></td>
+                      <td class="text-left"><%= _prod_row.name %></td>
+                      <td>
+                        <div class="action-buttons row mx-2">
+                          <!-- Button trigger modal -->
+                          <a
+                            name="link-edit-inventory"
+                            class="btn btn-primary edit-btn col mx-1 update-btn"
+                            href="/admin/load-pledges/edit/<%=_prod_row.id%>"
+                            role="button"
+                            >Editar</a
+                          >
+                          <a
+                            name="link-delete-inventory"
+                            class="btn btn-danger delete-btn col mx-1"
+                            href="/admin/load-pledges/delete/<%=_prod_row.id%>"
+                            role="button"
+                            >Borrar</a
+                          >
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- MODALS section -->
+            <div>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="updateModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="modelTitleId"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edición de Producto</h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Edita el precio del producto seleccionado</p>
+                      <form action="/admin/load-pledges/update/" method="POST">
+                        <!-- HIDDEN INPUTS FOR NON EDITABLE -->
+                        <input type="hidden" name="Pledge_id" id="Pledge_id" />
+                        <!-- NON EDITABLE INPUTS -->
+                        <div class="form-group">
+                          <label for="id-product-display">ID</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="id-product-display"
+                            id="id-product-display"
+                            aria-describedby="pledge-id-small"
+                            placeholder="id del producto"
+                            disabled
+                          />
+                          <small
+                            id="id-product-display-small"
+                            class="form-text text-muted"
+                            >ID de la prenda, no se puede editar</small
+                          >
+                        </div>
+                        <div class="form-group">
+                          <label for="Pledge_name">Nombre</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="Pledge_name"
+                            id="Pledge_name"
+                            aria-describedby="Pledge_name-small"
+                            placeholder="Nombre de la prenda"
+                            required
+                          />
+                          <small
+                            id="Pledge_name-small"
+                            class="form-text text-muted"
+                            >Nombre de la prenda, editarlo afecta todos los
+                            registros</small
+                          >
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                          Guardar
+                        </button>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary">
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/admin/list-pledges.js"></script>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>REPORTES</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <div><%- include("../../../partials/nav.ejs")%></div>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <!-- TITLE -->
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="text-center text-uppercase">REPORTE generado</h1>
+            <p>Se listan todos los resultados para el reporte solicitado</p>
+          </div>
+          <div>
+            <div
+              class="alert alert-info alert-dismissible fade show"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong> <%=reportType%> </strong> reporte generado
+            </div>
+
+            <script>
+              $(".alert").alert();
+            </script>
+          </div>
+          <div>
+            <div class="table-responsive d-flex justify-content-center row">
+              <!-- TABLE -->
+              <table class="table table-striped col-lg-10">
+                <thead class="thead-dark">
+                  <!-- GET KEYS TO DISPLAY IN TITLES -->
+                  <tr>
+                    <% table_data.titles.forEach(_title=> { %>
+                    <th class="text-center" scope="row"><%=_title%></th>
+                    <% }); %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- GET DATA TO DISPLAY IN TABLE -->
+                  <!-- iterate over vector -->
+                  <% table_data.data.forEach(_data_row=> { %>
+                  <tr>
+                    <!-- Access each key-value pair within the current JSON object -->
+                    <% for (const [key, value] of Object.entries(_data_row)) {
+                    %>
+                    <td class="text-center">
+                      <!-- check if var type is date -> format with formatDate -->
+                      <%= value instanceof Date ? formatDate(value) : value %>
+                    </td>
+                    <% } %>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/admin/list-user.js"></script>

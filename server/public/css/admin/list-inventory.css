@@ -1,0 +1,33 @@
+.center-text {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.id-column {
+    width: 6%;
+}
+
+.name-column {
+    width: 60%;
+}
+
+.size-column {
+    width: 6%;
+}
+
+.price-column {
+    width: 10%;
+}
+
+.actions-column {
+    /* Allow it to expand to fit its content */
+    max-width: 8%;
+}
+
+table {
+    max-width: 86%;
+}
+
+.fixed-width {
+    width: 60px; /* Adjust the width as needed */
+}

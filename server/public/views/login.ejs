@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <div class="col-md-6 offset-md-3">
+        <a href="/login">
+          <h1 class="text-center mb-4">Inicio de Sesión | Las Novedades</h1>
+        </a>
+        <div>
+          <%- include("partials/messages.ejs", { message: message,
+          error_message: error_message }) %>
+        </div>
+        <form action="/signin" method="post">
+          <div class="form-group">
+            <label for="id">Username:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              name="id"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <!-- SELECT CURRENT STORE -->
+          <div class="form-group">
+            <label for="current_building">Ubicación</label>
+            <select
+              class="custom-select"
+              name="current_building"
+              id="current_building"
+              required
+            >
+              <option selected disabled>-- SELECCIONAR --</option>
+              <!-- FOR THROUGH buddings -->
+              <% buildings.forEach((building) => { %>
+              <option value="<%= building.id %>"><%= building.name %></option>
+              <% }); %>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            Iniciar Sesión
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Include Bootstrap JS from CDN -->
+    <script src="/js/bootstrap.js"></script>
+  </body>
+</html>

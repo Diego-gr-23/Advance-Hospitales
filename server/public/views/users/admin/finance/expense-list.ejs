@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>ADMIN | GASTOS</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    <!-- Add your additional CSS styles here if needed -->
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- ASIDE -->
+        <div><%- include("../../../partials/asides/admin-aside") %></div>
+        <!-- Main content area -->
+        <main role="main" class="col-lg-10 px-4 m-auto">
+          <div>
+            <%- include("../../../partials/messages.ejs", {message: message,
+            error_message: error_message})%>
+          </div>
+          <div>
+            <div>
+              <div>
+                <h1 class="mt-5 mb-3 text-uppercase text-center">
+                  Listado de Gastos
+                </h1>
+                <p class="text-center">
+                  Aca puedes eliminar, editar y ver todos los tipos de gasto que
+                  tienes.
+                </p>
+              </div>
+              <!-- DISPLAY VALUES FROM DB DYNAMICALLY FOR data.expenses_type-->
+              <!-- TABLE HEADER -->
+              <div class="d-flex justify-content-center">
+                <!-- TOTAL VARIABLE -->
+                <% let _total=0; %>
+                <!-- TABLE -->
+                <!-- DISPLAY TOTAL -->
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th class="text-uppercase text-center id-column">
+                          CÓDIGO
+                        </th>
+                        <th class="text-uppercase text-center w-10">
+                          CANTIDAD
+                        </th>
+                        <th class="text-uppercase text-center w-10">FECHA</th>
+                        <th class="text-uppercase text-center">TRABAJADOR</th>
+                        <th class="text-uppercase text-center">TIPO GASTO</th>
+                        <th class="text-uppercase text-center w-20">
+                          ACCIONES
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% data.expenses.forEach(_expense=> { %> <% _total
+                      +=_expense.ammount; %>
+                      <tr>
+                        <td class="text-center"><%= _expense.id %></td>
+                        <td class="text-right">Q<%= _expense.ammount %></td>
+                        <td class="text-center">
+                          <%= data.functions.formatDate(_expense.date) %>
+                        </td>
+                        <td class="text-center"><%= _expense.worker_id %></td>
+                        <td class="text-center">
+                          <%= _expense.expense_type_name %>
+                        </td>
+                        <td>
+                          <div class="action-buttons row mx-2">
+                            <!-- display modal to fetch data and then display modal -->
+                            <button
+                              class="btn btn-outline-warning edit-btn col mx-1 edit-expense-btn"
+                              data-parameter="<%=_expense.id%>"
+                            >
+                              Editar
+                            </button>
+                            <a
+                              name="link-delete-expense"
+                              class="btn btn-danger col mx-1"
+                              href="/admin/finance/delete/expense/<%=_expense.id%>"
+                              role="button"
+                              >Borrar</a
+                            >
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- Add more rows as needed -->
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="alert alert-danger" role="alert">
+                <strong>Gastos totales: </strong>
+                Q<%=_total%>
+              </div>
+            </div>
+            <!-- MODALS section -->
+            <div>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="editExpenseModal"
+                tabindex="-1"
+                aria-labelledby="editExpenseModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="editExpenseModalLabel">
+                        Editar Gasto
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form
+                      id="editExpenseForm"
+                      method="POST"
+                      action="/admin/finance/update/expense/"
+                    >
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="expense_id">Código</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="expense_id"
+                            id="expense_id"
+                            aria-describedby="expense_id_small"
+                            placeholder="Código xxx"
+                            required
+                            readonly
+                          />
+                          <small
+                            id="expense_id_small"
+                            class="form-text text-muted"
+                            >Código de gasto, no es editable</small
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="expense_ammount"
+                                >Cantidad (GTQ)</label
+                              >
+                              <input
+                                type="number"
+                                class="form-control"
+                                name="expense_ammount"
+                                id="expense_ammount"
+                                aria-describedby="expense_ammount_small"
+                                placeholder="Cantidad"
+                                required
+                                step="0.01"
+                                min="0"
+                              />
+                              <small
+                                id="expense_ammount_small"
+                                class="form-text text-muted"
+                                >Cantidad de gasto</small
+                              >
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <!-- DATE INPUT -->
+                            <div class="form-group">
+                              <label for="expense_date">Fecha</label>
+                              <input
+                                type="date"
+                                class="form-control"
+                                name="expense_date"
+                                id="expense_date"
+                                aria-describedby="expense_date_small"
+                                placeholder="Fecha"
+                                required
+                              />
+                              <small
+                                id="expense_date_small"
+                                class="form-text text-muted"
+                                >Fecha de gasto</small
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <!-- WORKER ID INPUT -->
+                            <div class="form-group">
+                              <label for="worker_id">ID trabajador</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="trabajador"
+                                id="worker_id"
+                                aria-describedby="trabajador_id"
+                                placeholder="ID ADMxxx"
+                                disabled
+                              />
+                              <small
+                                id="trabajador_id"
+                                class="form-text text-muted"
+                                >Id del trabajador (no se puede editar)</small
+                              >
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="worker_name">Nombre trabajador</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="worker_name"
+                                id="worker_name"
+                                aria-describedby="worker_name_small"
+                                placeholder="Nombre XXX"
+                                disabled
+                              />
+                              <small
+                                id="worker_name_small"
+                                class="form-text text-muted"
+                                >Nombre del trabajador</small
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="expense_type">Tipo de gasto</label>
+                          <select
+                            class="form-control"
+                            name="expense_type"
+                            id="expense_type"
+                          ></select>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal"
+                        >
+                          Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                          Guardar
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<script src="/js/bootstrap.js"></script>
+<script src="/js/admin/list-expense.js"></script>

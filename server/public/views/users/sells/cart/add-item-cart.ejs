@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Existencias</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/sells-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-5">
+          <div>
+            <h1 class="text-uppercase text-center">Buscador de productos</h1>
+            <p class="text-center">
+              Busca productos para agregarlos al carrito de compras
+            </p>
+            <div>
+              <%- include("../../../partials/messages.ejs", {message: message,
+              error_message: error_message})%>
+            </div>
+          </div>
+          <section class="container mt-2">
+            <%- include("../../../partials/common/search-products-form.ejs")%>
+          </section>
+          <!-- SPLIT LINE -->
+          <!-- Horizontal split line -->
+          <div class="row">
+            <div class="col">
+              <hr class="split-line" />
+            </div>
+          </div>
+          <!-- DIV TO DISPLAY RESULT IN TABLE -->
+          <div>
+            <div class="alert alert-info" role="alert">
+              <h4 class="alert-heading">Productos encontrados</h4>
+              <p>Aca veras todos los productos encontrados según tu búsqueda</p>
+              <p class="mb-0">
+                Deja la búsqueda vacía si quieres que se busquen todos los
+                productos pertenecientes a tu tienda actual
+              </p>
+            </div>
+            <div class="table-responsive pl-5 pr-5">
+              <table class="table table-striped">
+                <thead class="table-dark">
+                  <tr>
+                    <th class="text-uppercase text-center w-10">CÓDIGO</th>
+                    <th class="text-uppercase name-column text-center">
+                      NOMBRE
+                    </th>
+                    <th class="text-uppercase text-center w-10">TALLA</th>
+                    <th class="text-uppercase text-center w-10">EXISTENCIA</th>
+                    <th class="text-uppercase text-center w-20">
+                      PRECIO (GTQ)
+                    </th>
+                    <th class="text-uppercase text-center w-10">UBICACIÓN</th>
+                    <th class="text-uppercase text-center w-10">ACCIONES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- FOR DATA DISPLAY VALUES -->
+                  <% data.forEach((item) => { %>
+                  <tr>
+                    <th
+                      id="tr_pledge_id_<%=item.pledge_id%>_<%=item.size%>"
+                      scope="row"
+                      class="text-center id-column"
+                    >
+                      <%=item.pledge_id%>
+                    </th>
+                    <td id="tr_pledge_name_<%=item.pledge_id%>_<%=item.size%>">
+                      <%=item.pledge_name%>
+                    </td>
+                    <td
+                      id="tr_pledge_size_<%=item.pledge_id%>_<%=item.size%>"
+                      class="text-center"
+                    >
+                      <%=item.size%>
+                    </td>
+                    <td class="text-center"><%=item.stock%></td>
+                    <td
+                      class="text-right"
+                      id="tr_pledge_price_<%=item.pledge_id%>_<%=item.size%>"
+                    >
+                      <%= Number(item.price).toFixed(2) %>
+                    </td>
+                    <td class="text-muted"><%=item.building_name%></td>
+                    <td>
+                      <% if (item.Building_id === building.id) { %>
+                      <div class="row d-felx justify-content-center">
+                        <div class="col-sm-5">
+                          <button
+                            name="openModalBtn"
+                            id="openModalBtn"
+                            class="btn btn-outline-info btn display-modal"
+                            data-modal-data="<%=item.pledge_id%>_<%=item.size%>"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <% } %>
+                    </td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!-- MODALS -->
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Agregar al carrito
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/sells/cart/add/" method="post" id="addToCartForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pledge_id">CÓDIGO</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="pledge_id"
+                      id="pledge_id"
+                      aria-describedby="pledge_id_small"
+                      placeholder="Código producto"
+                      readonly
+                      required
+                    />
+                    <small id="pledge_id_small" class="form-text text-muted"
+                      >Código del producto (no editable)</small
+                    >
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pledge_size">Talla</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="pledge_size"
+                      id="pledge_size"
+                      aria-describedby="pledge_size_small"
+                      placeholder="Talla xxx"
+                      readonly
+                      required
+                    />
+                    <small id="pledge_size_small" class="form-text text-muted"
+                      >Talla del producto (no editable)</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pledge_name">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="pledge_name"
+                  id="pledge_name"
+                  aria-describedby="pledge_name_small"
+                  placeholder="Producto xxx"
+                  readonly
+                  required
+                />
+                <small id="pledge_name_small" class="form-text text-muted"
+                  >Nombre del producto (no editable)</small
+                >
+              </div>
+              <div class="row d-felx justify-content-around">
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label for="pledge_price">Precio (GTQ)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="pledge_price"
+                      id="pledge_price"
+                      aria-describedby="pledge_price_small"
+                      placeholder="Q##.##"
+                      readonly
+                      required
+                    />
+                    <small id="pledge_price_small" class="form-text text-muted"
+                      >Precio en quetzales del producto</small
+                    >
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="quantity">Cantidad</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="quantity"
+                      id="quantity"
+                      aria-describedby="quantity_small"
+                      placeholder="1"
+                      required
+                      step="1"
+                      min="1"
+                    />
+                    <small id="quantity_small" class="form-text text-muted"
+                      >Cantidad a agregar a carrito</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- OPTIONAL EXTRA ATTRIBUTES -->
+              <div>
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="addExtras"
+                      id="addExtras"
+                      value="true"
+                    />
+                    Agregar extras
+                  </label>
+                </div>
+                <div class="row" id="extrasInputsForm" hidden>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label for="extras_note">Notas</label>
+                      <textarea
+                        class="form-control"
+                        name="extras_note"
+                        id="extras_note"
+                        rows="5"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="extras_price">Precio</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="extras_price"
+                        id="extras_price"
+                        min="0"
+                        step="0.01"
+                        aria-describedby="extras_price_small"
+                        placeholder="Q10.00"
+                      />
+                      <small
+                        id="extras_price_small"
+                        class="form-text text-muted"
+                        >Precio para el extra/(s)</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" form="addToCartForm">
+              Agregar</button
+            ><button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/sells/stock-search.js"></script>

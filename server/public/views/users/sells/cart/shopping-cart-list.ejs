@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Vista de vendedor</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/admin/admin-view.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/sells-aside") %></div>
+
+        <!-- Main content area -->
+        <main
+          role="main"
+          class="col-lg-9 px-4 m-auto pt-2"
+        >
+          <div>
+            <h1 class="text-capitalize mt-4 text-center">Carrito de compra</h1>
+            <p class="text-center">
+              Edita el listado para la factura antes de pasar al siguiente paso
+            </p>
+            <div>
+              <%- include("../../../partials/messages.ejs", {message: message,
+              error_message: error_message})%>
+            </div>
+          </div>
+
+          <section class="w-75 mt-4 m-auto">
+            <% shopping_cart.items.forEach( _bag_item => {%>
+            <!-- SECTION TO DISPLAY CUSTOM FORMS -->
+            <div class="mb-5">
+              <div class="row d-flex justify-content-between table-info p-4">
+                <h3><%=_bag_item.pledge_name%></h3>
+                <p>
+                  Producto con id
+                  <strong><%=_bag_item.pledge_id%></strong> talla
+                  <strong><%=_bag_item.pledge_size%></strong>
+                </p>
+              </div>
+              <div class="row border border-info pt-4 pb-4">
+                <div class="col-md-7 d-flex justify-content-end">
+                  <form
+                    class="form"
+                    method="POST"
+                    action="/sells/cart/edit/<%=_bag_item.pledge_id%>/<%=_bag_item.pledge_size%>"
+                  >
+                    <div
+                      class="form-group mb-2 form-inline d-flex justify-content-end"
+                    >
+                      <label for="quantity" class="sr-only">Número:</label>
+                      <input
+                        min="1"
+                        type="number"
+                        step="1"
+                        class="form-control mr-2"
+                        id="quantity"
+                        name="quantity"
+                        placeholder="##"
+                        value="<%=_bag_item.quantity%>"
+                        required
+                      />
+                      <button type="submit" class="btn btn-primary">
+                        Actualizar
+                      </button>
+                    </div>
+                    <% if(!(Object.keys(_bag_item.extras).length === 0)){%>
+                    <div class="row d-felx justify-content-end">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <!-- HIDDEN VALUE TO SAVE PREVIOUS TEXT -->
+                          <textarea
+                            class="form-control"
+                            name="extras_note_old"
+                            id="extras_note_old"
+                            rows="3"
+                            maxlength="100"
+                            hidden
+                            required
+                          >
+<%=_bag_item.extras.extras_note%></textarea
+                          >
+                          <!-- NEW VALUE TO NOTE -->
+                          <textarea
+                            class="form-control"
+                            name="extras_note"
+                            id="extras_note"
+                            rows="3"
+                            maxlength="100"
+                            required
+                          >
+<%=_bag_item.extras.extras_note%></textarea
+                          >
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <!-- HIDDEN INPUT TO SAVE PREVIOUS VALUE -->
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="1"
+                            class="form-control"
+                            name="extras_price_old"
+                            id="extras_price_old"
+                            aria-describedby="extras_price_small"
+                            placeholder="Q##.##"
+                            value="<%=Number(_bag_item.extras.extras_price).toFixed(2)%>"
+                            hidden
+                            required
+                          />
+                          <!-- NEW VALUE TO VALUE -->
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="1"
+                            class="form-control"
+                            name="extras_price"
+                            id="extras_price"
+                            aria-describedby="extras_price_small"
+                            placeholder="Q##.##"
+                            value="<%=Number(_bag_item.extras.extras_price).toFixed(2)%>"
+                            required
+                          />
+                          <small
+                            id="extras_price_small"
+                            class="form-text text-muted"
+                            >Ingresa el precio del extra</small
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <% }%>
+                    <!-- OTHER DIV, THIS IS NOT INLINE -->
+                  </form>
+                </div>
+                <div class="col-md-5">
+                  <a
+                    class="btn btn-success"
+                    role="button"
+                    href="/sells/cart/increase-one/<%=_bag_item.pledge_id%>/<%=_bag_item.pledge_size%>/<%=!(Object.keys(_bag_item.extras).length === 0)%>?extras_note=<%=_bag_item.extras.extras_note%>&extras_price=<%=_bag_item.extras.extras_price%>"
+                  >
+                    + 1
+                  </a>
+                  <a
+                    class="btn btn-warning"
+                    role="button"
+                    href="/sells/cart/decrease-one/<%=_bag_item.pledge_id%>/<%=_bag_item.pledge_size%>/<%=!(Object.keys(_bag_item.extras).length === 0)%>?extras_note=<%=_bag_item.extras.extras_note%>&extras_price=<%=_bag_item.extras.extras_price%>"
+                  >
+                    - 1
+                  </a>
+                  <a
+                    class="btn btn-danger"
+                    role="button"
+                    href="/sells/cart/remove/<%=_bag_item.pledge_id%>/<%=_bag_item.pledge_size%>/<%=!(Object.keys(_bag_item.extras).length === 0)%>?extras_note=<%=_bag_item.extras.extras_note%>&extras_price=<%=_bag_item.extras.extras_price%>"
+                  >
+                    Borrar
+                  </a>
+                </div>
+              </div>
+            </div>
+            <% });%>
+          </section>
+          <!-- SPLIT LINE -->
+          <!-- Horizontal split line -->
+          <div class="row">
+            <div class="col">
+              <hr class="split-line" />
+            </div>
+          </div>
+          <!-- DIV TO DISPLAY RESULT IN TABLE -->
+          <section class="mt-2" id="summary">
+            <h2 class="mb-4 text-capitalize">Resumen compra</h2>
+
+            <!-- RESUMEN -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-center">NOMBRE</th>
+                  <th class="text-uppercase text-center">TALLA</th>
+                  <th class="text-uppercase text-center">CANTIDAD</th>
+                  <th class="text-uppercase text-center">PRECIO UNITARIO</th>
+                  <th class="text-uppercase text-center">PRECIO EXTRAS</th>
+                  <th class="text-uppercase text-center">SUBTOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% let total = 0 %> <% shopping_cart.items.forEach( _bag_item =>
+                {%>
+                <tr>
+                  <td scope="row" class="text-left">
+                    <%=_bag_item.pledge_name%>
+                  </td>
+                  <td class="text-center"><%=_bag_item.pledge_size%></td>
+                  <td class="text-right"><%=_bag_item.quantity%></td>
+                  <td class="text-right">
+                    Q<%=Number(_bag_item.pledge_price).toFixed(2)%>
+                  </td>
+                  <%let tmp_extras = isNaN(_bag_item.extras.extras_price) ?
+                  Number('0') : Number(_bag_item.extras.extras_price); %>
+                  <td class="text-right">
+                    <%= `Q ${tmp_extras.toFixed(2)}` %>
+                  </td>
+                  <% let subtotal = _bag_item.pledge_price * _bag_item.quantity
+                  + tmp_extras; total += subtotal; %>
+                  <td class="text-right"><%= `Q${subtotal.toFixed(2)}` %></td>
+                  <% });%>
+                </tr>
+                <!-- TOTAL ON TABLE -->
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td class="text-right">TOTAL</td>
+                  <td class="text-right">Q<%=total.toFixed(2)%></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Horizontal split line -->
+            <div class="row">
+              <div class="col">
+                <hr class="split-line" />
+              </div>
+            </div>
+
+            <div
+              class="alert alert-light text-uppercase d-flex justify-content-end"
+              role="alert"
+            >
+              <p>
+                El total de la factura es de
+                <strong>Q<%=total.toFixed(2)%></strong>
+              </p>
+            </div>
+          </section>
+
+          <section class="mb-4">
+            <div class="mb-4">
+              <h3 class="text-capitalize">Datos Cliente</h3>
+              <p class="text-center">
+                Estos son los datos actuales para la factura descrita arriba,
+                puedes dejar <strong>vacío / no buscar</strong> para que la
+                factura sea <strong>Consumidor Final</strong>
+              </p>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <!-- CLIENT FOUND DATA -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="sr-only" for="client_nit">NIT cliente</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">NIT</div>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="client_nit"
+                        placeholder="NIT 12345678"
+                        required
+                        maxlength="10"
+                        readonly
+                        value="<%=shopping_cart.client.NIT%>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="sr-only" for="client_nit">No. Teléfono</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">No. Celular</div>
+                      </div>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="client_nit"
+                        placeholder="NIT 12345678"
+                        required
+                        min="10000000"
+                        max="99999999"
+                        readonly
+                        value="<%=shopping_cart.client.phone_number%>"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <label class="sr-only" for="client_name"
+                    >Nombre Cliente</label
+                  >
+                  <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Nombre</div>
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="client_name"
+                      placeholder="ej. Juan Perez"
+                      required
+                      readonly
+                      value="<%=shopping_cart.client.name%>"
+                    />
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <label class="sr-only" for="client_address"
+                    >Dirección del cliente</label
+                  >
+                  <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Dirección</div>
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="client_address"
+                      placeholder="ej. Ciudad"
+                      required
+                      readonly
+                      value="<%=shopping_cart.client.address%>"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 mb-4">
+                <div>
+                  <div class="row">
+                    <!-- SEARCH CLIENT -->
+                    <div class="m-auto">
+                      <form
+                        class="form-inline mb-3"
+                        action="/sells/cart/search-client/"
+                        method="post"
+                      >
+                        <label class="sr-only" for="client_nit"
+                          >NIT cliente</label
+                        >
+                        <div class="input-group mb-2 mr-sm-2">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text">NIT</div>
+                          </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="client_nit"
+                            id="client_nit"
+                            placeholder="NIT 12345678"
+                            required
+                            maxlength="10"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          class="btn btn-warning mb-2 text-uppercase"
+                        >
+                          Buscar
+                        </button>
+                      </form>
+                    </div>
+                    <!-- SAVE BILL -->
+                    <a
+                      name="save_bill"
+                      id="save_bill"
+                      class="btn btn-outline-primary btn-block text-uppercase"
+                      href="/sells/cart/checkout/"
+                      role="button"
+                      >Generar Recibo</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+  <%- include("../../../partials/footer.ejs")%>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->

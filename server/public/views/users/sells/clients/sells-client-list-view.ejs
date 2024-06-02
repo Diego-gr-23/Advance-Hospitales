@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Vista de vendedor</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Add your additional CSS styles here if needed -->
+    <link rel="stylesheet" href="/css/admin/admin-view.css" />
+  </head>
+
+  <nav><%- include("../../../partials/nav.ejs")%></nav>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div><%- include("../../../partials/asides/sells-aside") %></div>
+
+        <!-- Main content area -->
+        <main role="main" class="col-lg-9 px-4 m-auto pt-5">
+          <div>
+            <h1 class="text-uppercase text-center">Clientes encontrados</h1>
+            <p class="text-center">
+              Revisa los clientes encontrados, los puedes editar o borrar,
+              recuerda que no puedes borrar un cliente que ya haya registrado
+              algún gasto
+            </p>
+            <div>
+              <%- include("../../../partials/messages.ejs", {message: message,
+              error_message: error_message})%>
+            </div>
+          </div>
+          <section>
+            <!-- TABLE TO DISPLAY VALUES FROM DB, TABLE HEADS: NIT, NAME, DIRECTION, ACTIONS (FOR BUTTONS) -->
+            <!-- ACCESS VIA VARIABLE clients.forEach -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-center text-uppercase">NIT</th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Nombre
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Dirección
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Celular (+502)
+                  </th>
+                  <th class="text-uppercase text-center text-uppercase">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% clients.forEach(client => { %>
+                <tr>
+                  <td
+                    id="td_client_nit_<%=client.NIT%>"
+                    class="text-uppercase text-center"
+                    scope="row"
+                  >
+                    <%=client.NIT %>
+                  </td>
+                  <td id="td_client_name_<%=client.NIT%>"><%=client.name%></td>
+                  <td id="td_client__address_<%=client.NIT%>">
+                    <%=client.address%>
+                  </td>
+                  <td
+                    id="td_client_phone_number_<%=client.NIT%>"
+                    class="text-center"
+                  >
+                    <%=client.phone_number%>
+                  </td>
+                  <td style="width: 20%">
+                    <div class="action-buttons row mx-2">
+                      <!-- display modal to fetch data and then display modal -->
+                      <button
+                        class="btn btn-outline-primary edit-btn col mx-1 edit-client-btn"
+                        data-parameter="<%=client.NIT%>"
+                      >
+                        Editar
+                      </button>
+                      <% if(client.NIT != DEFAULT_BILL_NIT) { %>
+
+                      <a
+                        name="client-delete"
+                        id="client-delete"
+                        class="btn btn-danger col mx-1"
+                        href="/sells/clients/delete/<%=client.NIT%>"
+                        role="button"
+                        >Borrar</a
+                      >
+                      <% } %>
+                    </div>
+                    <!-- BUTTON ACTION, EDIT AND DELETE -->
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+    <!-- MODALS -->
+    <div>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="editClientModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modelTitleId"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edita al cliente</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form
+                action="/sells/clients/edit/"
+                method="post"
+                id="editClientForm"
+              >
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="client_nit">NIT</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="client_nit"
+                        id="client_nit_edit_form"
+                        aria-describedby="client_nit_small"
+                        placeholder="NIT xxxx"
+                        required
+                        readonly
+                      />
+                      <small id="client_nit_small" class="form-text text-muted"
+                        >NIT del cliente (no editable)</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="client_phone_number">No. de teléfono</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="client_phone_number"
+                        id="client_phone_number_edit_form"
+                        aria-describedby="client_phone_number_small"
+                        placeholder="+502 xxxx xxxx"
+                        required
+                        step="1"
+                        min="10000000"
+                        max="999999999"
+                      />
+                      <small
+                        id="client_phone_number_small"
+                        class="form-text text-muted"
+                        >No. de teléfono del cliente (sin el +502, sin
+                        espacios)</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="client_name">Nombre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="client_name"
+                    id="client_name_edit_form"
+                    aria-describedby="client_name_small"
+                    placeholder="ej. Alexis R."
+                    required
+                  />
+                  <small id="client_name_small" class="form-text text-muted"
+                    >Nombre del cliente</small
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="client_address">Dirección</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="client_address"
+                    id="client_address_edit_form"
+                    aria-describedby="client_address_small"
+                    placeholder="Dirección xxx av yyy"
+                    required
+                  />
+                  <small id="client_address_small" class="form-text text-muted"
+                    >Dirección del cliente</small
+                  >
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                form="editClientForm"
+              >
+                Actualizar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <footer><%- include("../../../partials/footer.ejs")%></footer>
+</html>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="/js/bootstrap.js"></script>
+<!-- Your custom JavaScript to handle panel visibility -->
+<script src="/js/sells/sells-clients-list.js"></script>
